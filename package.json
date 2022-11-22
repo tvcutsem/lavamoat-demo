@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "node": "node setup1.js",
+    "lavamoat-init": "npx rollup -c && npx lavamoat -a bundle.js",
+    "lavamoat": "npx rollup -c && npx lavamoat bundle.js",
+    "clean": "rm bundle.js && rm -rf lavamoat/node"
+  },
+  "devDependencies": {
+    "lavamoat": "^6.4.0",
+    "rollup": "^3.4.0"
+  }
+}
