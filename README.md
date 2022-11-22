@@ -108,7 +108,7 @@ In other words, the attack fails with a `TypeError` since `Array.prototype` is n
 
 ## misc notes
 
-We use [rollup](https://rollupjs.org/guide/en/) to compile `setup2.js` into a standard commonjs bundle without JS module syntax.
+We use [rollup](https://rollupjs.org/guide/en/) to compile `setup2.js` into a standard commonjs bundle without JS module syntax before feeding it to lavamoat.
 
 Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax?
 
