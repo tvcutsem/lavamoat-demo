@@ -26,7 +26,8 @@ function attack4(log) {
 
 export default function bob(log) {
     console.log('bob: reading the log: ', log.read());
-     attack1(log);
+    // uncomment one of the below lines to demonstrate an attack
+    // attack1(log);
     // attack2(log);
     // attack3(log);
     // attack4(log);
