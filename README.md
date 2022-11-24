@@ -1,6 +1,6 @@
 # lavamoat-demo
 
-Demo on how to use [lavamoat](https://github.com/LavaMoat/LavaMoat/) and [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) (SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript.
+Demo on how to use [lavamoat](https://github.com/LavaMoat/LavaMoat/) and [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) (SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript, object-capabilities and the Principle of Least Authority ("POLA").
 
 Specifically, we demonstrate [lavamoat-node](https://github.com/LavaMoat/LavaMoat/tree/main/packages/node), a way to run JavaScript modules in an SES sandbox on nodejs.
 
@@ -14,13 +14,13 @@ npm install
 
 # scenario
 
-The `setup1.js` code loads two modules `alice` and `bob` and gives them access to a shared `log` object.
+The `setup1.js` code loads two modules `alice` and `bob` and gives them access to a shared `log` object. For simplicity, the log is implemented as an array of string messages.
 
-The guarantee we want to achieve is that `alice` can only write to the log, while `bob` can only read from the log.
+The POLA access control policy we want to enforce is that `alice` can only **write** to the log, while `bob` can only **read** from the log.
 
 See the example code in the [slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) to follow along.
 
-## without lavamoat/ses
+## running the scenario without lavamoat/ses
 
 We first show various ways Bob can circumvent the read-only restrictions on the log. See `attack 1` through `attack 4` in `bob.js`.
 
@@ -49,7 +49,7 @@ log contents:  []
 
 Here we can see the effect of Bob poisoning `Array.prototype.push`, causing Alice's write to get lost.
 
-## with lavamoat/ses
+## running the scenario with lavamoat/ses
 
 Lavamoat will run the code in an isolated SES sandbox with frozen 'primordial' objects where prototype poisoning attacks will fail.
 
