@@ -22,47 +22,38 @@ See the example code in the [slides](https://tvcutsem.github.io/assets/HardenedJ
 
 ## without lavamoat/ses
 
-We first show various ways Bob can circumvent the read-only restrictions on the log. See `attack1` through `attack4` in `bob.js`.
+We first show various ways Bob can circumvent the read-only restrictions on the log. See `attack 1` through `attack 4` in `bob.js`.
 
-To observe the effect, uncomment one of the `attackX(log)` lines in `bob.js` and run `setup1.js` using vanilla node:
+To run through a scenario where Bob does not stage an attack:
 
 Run `node setup1.js` or `npm run node`
 
 Without attacks, the output of the code should be:
 
 ```
-lavamoat-demo % npm run node
-
-> node
-> node setup1.js
-
+lavamoat-demo % node setup1.js 
 alice: writing to log
 bob: reading the log:  [ 'alice' ]
-done
+log contents:  [ 'alice' ]
 ```
 
-If we uncomment `attack1` we see the effect of Bob poisoning `Array.prototype`, causing Alice's write to get lost:
+To run through a scenario where bob executes one of the attacks, pass a command-line arg of "1" through "4". Fo example, to let bob run attack 1:
 
 ```
-AssertionError [ERR_ASSERTION]: Expected values to be loosely deep-equal:
-
-[
-  'alice'
-]
-
-should loosely deep-equal
-
-[
-  'alice',
-  'host'
-]
+lavamoat-demo % node setup1.js 1
+alice: writing to log
+Bob's evil push function
+bob: reading the log:  []
+log contents:  []
 ```
+
+Here we can see the effect of Bob poisoning `Array.prototype.push`, causing Alice's write to get lost.
 
 ## with lavamoat/ses
 
-Lavamoat will put the modules in an isolated SES sandbox with frozen 'primordial' objects where prototype poisoning attacks will fail.
+Lavamoat will run the code in an isolated SES sandbox with frozen 'primordial' objects where prototype poisoning attacks will fail.
 
-The file `setup2.js` assumes it will run in an SES sandbox, where new functions like `harden()` are available.
+The file `setup2.js` assumes it will run in an SES sandbox, where functions like `harden()` are available globally.
 
 To run the module using lavamoat, first let lavamoat generate a policy file:
 
@@ -75,20 +66,14 @@ This will generate a `lavamoat/node/policy.json` file establishing the privilege
 Then run the code using the lavamoat cli tool:
 
 ```
-npm run lavamoat
-```
-
-If Bob tries to run `attack1` the output will be:
-
-```
-% npm run lavamoat
+lavamoat-demo % npm run lavamoat
 
 > lavamoat
 > npx rollup -c && npx lavamoat bundle.js
 
 
 setup2.js → bundle.js...
-created bundle.js in 18ms
+created bundle.js in 30ms
 Removing intrinsics.Object.hasOwn
 Removing intrinsics.%ArrayPrototype%.findLast
 Removing intrinsics.%ArrayPrototype%.findLastIndex
@@ -98,13 +83,38 @@ Removing intrinsics.%TypedArrayPrototype%.findLast
 Removing intrinsics.%TypedArrayPrototype%.findLastIndex
 alice: writing to log
 bob: reading the log:  [ 'alice' ]
+log contents:  [ 'alice' ]
+```
+
+If Bob now tries to run `attack 1` the output will be:
+
+```
+lavamoat-demo % npm run lavamoat 1
+
+> lavamoat
+> npx rollup -c && npx lavamoat bundle.js 1
+
+
+setup2.js → bundle.js...
+created bundle.js in 20ms
+Removing intrinsics.Object.hasOwn
+Removing intrinsics.%ArrayPrototype%.findLast
+Removing intrinsics.%ArrayPrototype%.findLastIndex
+Removing intrinsics.%ArrayPrototype%.@@unscopables.findLast
+Removing intrinsics.%ArrayPrototype%.@@unscopables.findLastIndex
+Removing intrinsics.%TypedArrayPrototype%.findLast
+Removing intrinsics.%TypedArrayPrototype%.findLastIndex
 TypeError: Cannot assign to read only property 'push' of 'root.%ArrayPrototype%.push'
   at Array.setter (LavaMoat/node/kernel:7953:17)
-  at attack1 (eval at <anonymous> (eval at makeEvaluateFactory (LavaMoat/node/kernel)), <anonymous>:13:26)
+  at initBob (eval at <anonymous> (eval at makeEvaluateFactory (LavaMoat/node/kernel)), <anonymous>:17:34)
+  at Object.eval (eval at <anonymous> (eval at makeEvaluateFactory (LavaMoat/node/kernel)), <anonymous>:68:13)
+  at Object.internalRequire (LavaMoat/core/kernel:533:27)
   ...
 ```
 
 In other words, the attack fails with a `TypeError` since `Array.prototype` is now immutable.
+
+Attacks 2, 3 and 4 will also fail under the new setup and when executed in lavamoat.
 
 ## misc notes
 
