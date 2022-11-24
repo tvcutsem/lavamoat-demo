@@ -1,6 +1,8 @@
-import alice from "./alice.js";
-import bob from "./bob.js";
-import assert from 'node:assert';
+import initAlice from "./alice.js";
+import initBob from "./bob.js";
+
+const args = process.argv.slice(2);
+const flag = args[0] || "";
 
 // as an alternative to using lavamoat, we can use 'ses' sandboxes directly:
 // run `npm i ses`, then:
@@ -8,21 +10,22 @@ import assert from 'node:assert';
 // lockdown();
 
 function makeLog() {
-  let messages = [];
-  function write(msg) {
-    messages.push(msg);
-  }
-  function read() {
-    return [...messages];
-  }
-  return harden({read, write});
+  const messages = [];
+  function write(msg) { messages.push(msg); }
+  function read() { return [...messages]; }
+  function size() { return messages.length(); }
+  return harden({
+    reader: {read, size},
+    writer: {write, size}
+  });
 }
 
-let log = makeLog();
+const log = makeLog();
 
-alice(harden({write: log.write}));
-bob(harden({read: log.read}));
+const alice = initAlice(log.writer);
+const bob = initBob(log.reader, flag);
 
-log.write('host');
+alice();
+bob();
 
-assert.deepEqual(log.read(), ['alice', 'host']);
+console.log('log contents: ', log.reader.read());

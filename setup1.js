@@ -1,6 +1,8 @@
-import alice from "./alice.js";
-import bob from "./bob.js";
-import assert from 'node:assert';
+import initAlice from "./alice.js";
+import initBob from "./bob.js";
+
+const args = process.argv.slice(2);
+const flag = args[0] || "";
 
 class Log {
   constructor() {
@@ -12,12 +14,10 @@ class Log {
 
 let log = new Log();
 
+const alice = initAlice(log);
+const bob = initBob(log, flag);
 
-alice(log);
-bob(log);
+alice();
+bob();
 
-log.write('host');
-
-assert.deepEqual(log.read(), ['alice', 'host']);
-
-console.log('done');
+console.log('log contents: ', log.read());
