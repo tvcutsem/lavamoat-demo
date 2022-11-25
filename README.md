@@ -18,6 +18,8 @@ The `setup1.js` code loads two modules `alice` and `bob` and gives them access t
 
 The POLA access control policy we want to enforce is that `alice` can only **write** to the log, while `bob` can only **read** from the log.
 
+![scenario setup](setup.png)
+
 See the example code in the [slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) to follow along.
 
 ## running the scenario without lavamoat/ses
