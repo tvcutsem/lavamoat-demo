@@ -37,7 +37,7 @@ bob: reading the log:  [ 'alice' ]
 log contents:  [ 'alice' ]
 ```
 
-To run through a scenario where bob executes one of the attacks, pass a command-line arg of "1" through "4". Fo example, to let bob run attack 1:
+To run through a scenario where bob executes one of the attacks, pass a command-line arg of "1" through "4". For example, to let bob run attack 1:
 
 ```
 lavamoat-demo % node setup1.js 1
@@ -86,6 +86,8 @@ bob: reading the log:  [ 'alice' ]
 log contents:  [ 'alice' ]
 ```
 
+(The "Removing..." messages are warnings printed by the SES sandboxing script, indicating that it found non-standard properties on built-in objects.)
+
 If Bob now tries to run `attack 1` the output will be:
 
 ```
@@ -120,7 +122,7 @@ Attacks 2, 3 and 4 will also fail under the new setup and when executed in lavam
 
 We use [rollup](https://rollupjs.org/guide/en/) to compile `setup2.js` into a standard commonjs bundle without JS module syntax before feeding it to lavamoat.
 
-Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax?
+Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax. If you know a fix for this, let me know.
 
 ```
 % npx lavamoat setup2.js
