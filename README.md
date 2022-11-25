@@ -122,7 +122,7 @@ Attacks 2, 3 and 4 will also fail under the new setup and when executed in lavam
 
 We use [rollup](https://rollupjs.org/guide/en/) to compile `setup2.js` into a standard commonjs bundle without JS module syntax before feeding it to lavamoat.
 
-Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax. If you know a fix for this, let me know.
+Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax. If you know a fix for this, let me know. It looks like ESM module support is [on the lavamoat roadmap](https://github.com/LavaMoat/LavaMoat/issues/389#issuecomment-1325226403).
 
 ```
 % npx lavamoat setup2.js
