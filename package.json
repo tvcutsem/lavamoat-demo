@@ -7,7 +7,7 @@
     "clean": "rm bundle.js && rm -rf lavamoat/node"
   },
   "devDependencies": {
-    "lavamoat": "^6.4.0",
+    "lavamoat": "^8.0.6",
     "rollup": "^3.4.0"
   }
 }
