@@ -76,19 +76,10 @@ lavamoat-demo % npm run lavamoat
 
 setup2.js → bundle.js...
 created bundle.js in 30ms
-Removing intrinsics.Object.hasOwn
-Removing intrinsics.%ArrayPrototype%.findLast
-Removing intrinsics.%ArrayPrototype%.findLastIndex
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLast
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLastIndex
-Removing intrinsics.%TypedArrayPrototype%.findLast
-Removing intrinsics.%TypedArrayPrototype%.findLastIndex
 alice: writing to log
 bob: reading the log:  [ 'alice' ]
 log contents:  [ 'alice' ]
 ```
-
-(The "Removing..." messages are warnings printed by the SES sandboxing script, indicating that it found non-standard properties on built-in objects.)
 
 If Bob now tries to run `attack 1` the output will be:
 
@@ -101,18 +92,11 @@ lavamoat-demo % npm run lavamoat 1
 
 setup2.js → bundle.js...
 created bundle.js in 20ms
-Removing intrinsics.Object.hasOwn
-Removing intrinsics.%ArrayPrototype%.findLast
-Removing intrinsics.%ArrayPrototype%.findLastIndex
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLast
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLastIndex
-Removing intrinsics.%TypedArrayPrototype%.findLast
-Removing intrinsics.%TypedArrayPrototype%.findLastIndex
 TypeError: Cannot assign to read only property 'push' of 'root.%ArrayPrototype%.push'
-  at Array.setter (LavaMoat/node/kernel:7953:17)
-  at initBob (eval at <anonymous> (eval at makeEvaluateFactory (LavaMoat/node/kernel)), <anonymous>:17:34)
-  at Object.eval (eval at <anonymous> (eval at makeEvaluateFactory (LavaMoat/node/kernel)), <anonymous>:68:13)
-  at Object.internalRequire (LavaMoat/core/kernel:533:27)
+  at set push (LavaMoat/node/kernel:5136:21)
+  at initBob (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:17:34)
+  at Object.eval (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:68:13)
+  at Object.internalRequire (LavaMoat/core/kernel:1143:27)
   ...
 ```
 
@@ -128,16 +112,10 @@ Trying to run lavamoat directly on `setup2.js` fails, apparently because it cann
 
 ```
 % npx lavamoat setup2.js
-Removing intrinsics.Object.hasOwn
-Removing intrinsics.%ArrayPrototype%.findLast
-Removing intrinsics.%ArrayPrototype%.findLastIndex
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLast
-Removing intrinsics.%ArrayPrototype%.@@unscopables.findLastIndex
-Removing intrinsics.%TypedArrayPrototype%.findLast
-Removing intrinsics.%TypedArrayPrototype%.findLastIndex
-LavaMoat - Error evaluating module "/setup2.js" from package "$root$" 
+LavaMoat - Error evaluating module ".../lavamoat-demo/setup2.js" from package "$root$" 
 SyntaxError: Cannot use import statement outside a module
-  at Object.eval (eval at makeEvaluateFactory (LavaMoat/node/kernel), <anonymous>:8:30)
-  at performEval (LavaMoat/node/kernel:4157:12)
+  at Object.eval (eval at makeEvaluate (LavaMoat/node/kernel), <anonymous>:12:36)
+  at safeEvaluate (LavaMoat/node/kernel:6551:14)
+  at compartmentEvaluate (LavaMoat/node/kernel:8787:10)
   ...
 ```
