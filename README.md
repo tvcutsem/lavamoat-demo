@@ -6,7 +6,7 @@ Specifically, we demonstrate [lavamoat-node](https://github.com/LavaMoat/LavaMoa
 
 # installation
 
-Make sure you have nodejs v18+ installed and run:
+Make sure you have nodejs >= v22.16.0 installed and run:
 
 ```
 npm install
@@ -34,22 +34,33 @@ Without attacks, the output of the code should be:
 
 ```
 lavamoat-demo % node setup1.js 
+bob: staging attack:  no-attack
 alice: writing to log
-bob: reading the log:  [ 'alice' ]
-log contents:  [ 'alice' ]
+bob: reading the log:  [ 'message from alice' ]
+log contents:  [ 'message from alice' ]
 ```
 
-To run through a scenario where bob executes one of the attacks, pass a command-line arg of "1" through "4". For example, to let bob run attack 1:
+To run through a scenario where bob executes one of the attacks, pass a command-line arg as follows:
+
+| arg | attack vector |
+|----------|----------|
+| proto-poisoning     | Bob poisons global built-ins like Array.prototype |
+| api-poisoning        | Bob poisons the public API of one of Alice's objects |
+| leak-mutable-state   | Bob corrupts mutable state leaked by Alice's API |
+| excess-authority        | Bob is given excess authority allowing him to perform actions he shouldn't be able to do |
+
+For example, to let bob run attack 1 (prototype poisoning):
 
 ```
-lavamoat-demo % node setup1.js 1
+lavamoat-demo % node setup1.js proto-poisoning
+bob: staging attack:  proto-poisoning
 alice: writing to log
-Bob's evil push function
+called Bob's evil push() function
 bob: reading the log:  []
 log contents:  []
 ```
 
-Here we can see the effect of Bob poisoning `Array.prototype.push`, causing Alice's write to get lost.
+Here we can see the effect of Bob poisoning `Array.prototype.push`, causing Alice's message to get lost.
 
 ## running the scenario with lavamoat/ses
 
@@ -75,40 +86,42 @@ lavamoat-demo % npm run lavamoat
 
 
 setup2.js → bundle.js...
-created bundle.js in 30ms
+created bundle.js in 34ms
+bob: staging attack:  no-attack
 alice: writing to log
-bob: reading the log:  [ 'alice' ]
-log contents:  [ 'alice' ]
+bob: reading the log:  [ 'message from alice' ]
+log contents:  [ 'message from alice' ]
 ```
 
-If Bob now tries to run `attack 1` the output will be:
+If Bob now tries to run the `proto-poisoning` attack the output will be:
 
 ```
-lavamoat-demo % npm run lavamoat 1
+lavamoat-demo % npm run lavamoat proto-poisoning
 
 > lavamoat
-> npx rollup -c && npx lavamoat bundle.js 1
+> npx rollup -c && npx lavamoat bundle.js proto-poisoning
 
 
 setup2.js → bundle.js...
-created bundle.js in 20ms
+created bundle.js in 23ms
+bob: staging attack:  proto-poisoning
 TypeError: Cannot assign to read only property 'push' of 'root.%ArrayPrototype%.push'
-  at set push (LavaMoat/node/kernel:5136:21)
-  at initBob (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:17:34)
-  at Object.eval (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:68:13)
-  at Object.internalRequire (LavaMoat/core/kernel:1143:27)
+  at set push (LavaMoat/node/kernel:6656:21)
+  at initBob (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:18:34)
+  at Object.eval (eval at <anonymous> (eval at makeEvaluate (LavaMoat/node/kernel)), <anonymous>:69:13)
+  at Object.internalRequire (LavaMoat/core/kernel:1355:27)
   ...
 ```
 
 In other words, the attack fails with a `TypeError` since `Array.prototype` is now immutable.
 
-Attacks 2, 3 and 4 will also fail under the new setup and when executed in lavamoat.
+All other attacks will also fail under the new setup (setup2.js) and when executed in lavamoat.
 
 ## misc notes
 
 We use [rollup](https://rollupjs.org/guide/en/) to compile `setup2.js` into a standard commonjs bundle without JS module syntax before feeding it to lavamoat.
 
-Trying to run lavamoat directly on `setup2.js` fails, apparently because it cannot deal with import syntax. If you know a fix for this, let me know. It looks like ESM module support is [on the lavamoat roadmap](https://github.com/LavaMoat/LavaMoat/issues/389#issuecomment-1325226403).
+Trying to run lavamoat directly on `setup2.js` fails, because Lavamoat [cannot yet handle ESM module import syntax](https://lavamoat.github.io/guides/lavamoat-node/). ESM module support is [on the lavamoat roadmap](https://github.com/LavaMoat/LavaMoat/issues/389#issuecomment-1325226403).
 
 ```
 % npx lavamoat setup2.js

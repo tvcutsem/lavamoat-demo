@@ -1,8 +1,11 @@
+// in this setup alice and bob run in the same JS environment
+// alice is prone to bob's attacks
+
 import initAlice from "./alice.js";
 import initBob from "./bob.js";
 
 const args = process.argv.slice(2);
-const flag = args[0] || "";
+const attack = args[0] || "no-attack";
 
 class Log {
   constructor() {
@@ -15,7 +18,7 @@ class Log {
 let log = new Log();
 
 const alice = initAlice(log);
-const bob = initBob(log, flag);
+const bob = initBob(log, attack);
 
 alice();
 bob();
