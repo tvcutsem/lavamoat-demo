@@ -47,9 +47,9 @@ To run through a scenario where bob executes one of the attacks, pass a command-
 | arg | attack vector |
 |----------|----------|
 | proto-poisoning     | Bob poisons global built-ins like Array.prototype |
-| api-poisoning        | Bob poisons the public API of one of Alice's objects |
-| leak-mutable-state   | Bob corrupts mutable state leaked by Alice's API |
-| excess-authority        | Bob is given excess authority allowing him to perform actions he shouldn't be able to do |
+| api-poisoning       | Bob poisons the public API of the log object |
+| leak-mutable-state  | Bob corrupts mutable state leaked by the log object's API |
+| excess-authority    | Bob is given excess authority allowing him to perform actions he shouldn't be able to do |
 
 For example, to let bob run a prototype poisoning attack:
 
@@ -66,9 +66,9 @@ Here we can see the effect of Bob poisoning `Array.prototype.push`, causing Alic
 
 ## running the scenario with lavamoat/ses
 
-Lavamoat will run the code in an isolated SES sandbox with frozen 'primordial' objects where prototype poisoning attacks will fail.
+Lavamoat will run each module dependency in an isolated SES sandbox with shared but immutable (frozen) 'primordial' objects where prototype poisoning attacks will fail.
 
-The file `setup-safe.js` assumes it will run in an SES sandbox, where functions like `harden()` are available globally.
+The file `setup-safe.js` assumes it will run in an SES sandbox, where functions like `harden()` are available globally. It also uses `harden()` to make the log object's API surface immutable.
 
 To run the module using lavamoat, first let lavamoat generate a [policy file](https://lavamoat.github.io/guides/policy/):
 
@@ -107,7 +107,7 @@ All other attacks will also fail under the new setup (`setup-safe.js`) and when 
 
 For a full list of commands to run each attack in an unsafe (vanilla nodejs) or safe  (lavamoat protected) environment, see the scripts section of `package.json`.
 
-## a note on module syntax
+## note on module syntax
 
 Lavamoat [cannot yet handle ESM module import syntax](https://lavamoat.github.io/guides/lavamoat-node/), so either you must use commonjs module syntax (as we did in this repo) or you can use tools like [rollup](https://rollupjs.org/guide/en/) to compile your ESM modules into a standard commonjs bundle before feeding it to lavamoat.
 
