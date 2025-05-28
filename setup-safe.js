@@ -2,16 +2,16 @@
 // also, alice properly hardens the log object and attenuates bob's authority
 // alice is no longer prone to bob's attacks
 
-import initAlice from "./alice.js";
-import initBob from "./bob.js";
-
-const args = process.argv.slice(2);
-const attack = args[0] || "no-attack";
-
 // as an alternative to using lavamoat, we can use 'ses' sandboxes directly:
 // run `npm i ses`, then:
 // import 'ses';
 // lockdown();
+
+const args = process.argv.slice(2);
+const attack = args[0] || "";
+
+const alice = require('./alice.js');
+const bob = require('./bob-maker.js')(attack);
 
 function makeLog() {
   const messages = [];
@@ -23,13 +23,11 @@ function makeLog() {
     writer: {write, size}
   });
 }
+let log = makeLog();
+const runAlice = alice.setup(log.writer);
+const runBob = bob.setup(log.reader);
 
-const log = makeLog();
-
-const alice = initAlice(log.writer);
-const bob = initBob(log.reader, attack);
-
-alice();
-bob();
+runAlice();
+runBob();
 
 console.log('log contents: ', log.reader.read());

@@ -1,13 +1,21 @@
 {
-  "type": "module",
   "scripts": {
-    "node": "node setup1.js",
-    "lavamoat-init": "npx rollup -c && npx lavamoat -a bundle.js",
-    "lavamoat": "npx rollup -c && npx lavamoat bundle.js",
-    "clean": "rm bundle.js && rm -rf lavamoat/node"
+    "node-no-attack": "node setup-unsafe.js",
+    "node-proto-poisoning": "node setup-unsafe.js proto-poisoning",
+    "node-api-poisoning": "node setup-unsafe.js api-poisoning",
+    "node-leak-mutable-state": "node setup-unsafe.js leak-mutable-state",
+    "node-excess-authority": "node setup-unsafe.js excess-authority",
+    "lavamoat-generate-policy": "npx lavamoat setup-safe.js --autopolicy",
+    "lavamoat-no-attack": "npx lavamoat setup-safe.js",
+    "lavamoat-proto-poisoning": "npx lavamoat setup-safe.js proto-poisoning",
+    "lavamoat-api-poisoning": "npx lavamoat setup-safe.js api-poisoning",
+    "lavamoat-leak-mutable-state": "npx lavamoat setup-safe.js leak-mutable-state",
+    "lavamoat-excess-authority": "npx lavamoat setup-safe.js excess-authority"
   },
   "devDependencies": {
-    "lavamoat": "^9.0.9",
-    "rollup": "^4.41.1"
+    "lavamoat": "^9.0.9"
+  },
+  "engine": {
+    "node": ">=22.16.0"
   }
 }
