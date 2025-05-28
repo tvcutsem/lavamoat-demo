@@ -2,7 +2,7 @@
 
 Demo on how to use [lavamoat](https://lavamoat.github.io) and [hardened javascript](https://hardenedjs.org) (formerly known as [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) or SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript, object-capabilities and the Principle of Least Authority ("POLA").
 
-Specifically, we demonstrate [lavamoat-node](https://github.com/LavaMoat/LavaMoat/tree/main/packages/node), a way to run JavaScript modules in an SES sandbox on nodejs.
+Specifically, we demonstrate [lavamoat-node](https://lavamoat.github.io/guides/lavamoat-node/), a way to run JavaScript modules in an SES sandbox on nodejs.
 
 # installation
 
@@ -24,9 +24,9 @@ See the example code in the [slides](https://tvcutsem.github.io/assets/HardenedJ
 
 ## running the scenario without lavamoat/ses
 
-We first show various ways Bob can circumvent the read-only restrictions on the log. See `attack 1` through `attack 4` in `bob.js`.
+We first show various ways Bob can circumvent the read-only restrictions on the log. See the different attack vectors in `bob.js`.
 
-To run through a scenario where Bob does not stage an attack:
+To run through a happy-case scenario where Bob does not stage an attack:
 
 Run `node setup1.js` or `npm run node`
 
@@ -40,7 +40,9 @@ bob: reading the log:  [ 'message from alice' ]
 log contents:  [ 'message from alice' ]
 ```
 
-To run through a scenario where bob executes one of the attacks, pass a command-line arg as follows:
+Alice has written a message `'message from alice'` to the log, and Bob was able to read this message.
+
+To run through a scenario where bob executes one of the attacks, pass a command-line arg specifying an attack vector as follows:
 
 | arg | attack vector |
 |----------|----------|
@@ -49,7 +51,7 @@ To run through a scenario where bob executes one of the attacks, pass a command-
 | leak-mutable-state   | Bob corrupts mutable state leaked by Alice's API |
 | excess-authority        | Bob is given excess authority allowing him to perform actions he shouldn't be able to do |
 
-For example, to let bob run attack 1 (prototype poisoning):
+For example, to let bob run a prototype poisoning attack:
 
 ```
 lavamoat-demo % node setup1.js proto-poisoning
@@ -68,7 +70,7 @@ Lavamoat will run the code in an isolated SES sandbox with frozen 'primordial' o
 
 The file `setup2.js` assumes it will run in an SES sandbox, where functions like `harden()` are available globally.
 
-To run the module using lavamoat, first let lavamoat generate a policy file:
+To run the module using lavamoat, first let lavamoat generate a [policy file](https://lavamoat.github.io/guides/policy/):
 
 ```
 npm run lavamoat-init
@@ -115,7 +117,7 @@ TypeError: Cannot assign to read only property 'push' of 'root.%ArrayPrototype%.
 
 In other words, the attack fails with a `TypeError` since `Array.prototype` is now immutable.
 
-All other attacks will also fail under the new setup (setup2.js) and when executed in lavamoat.
+All other attacks will also fail under the new setup (`setup2.js`) and when executed in lavamoat.
 
 ## misc notes
 
