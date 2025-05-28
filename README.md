@@ -1,6 +1,6 @@
 # lavamoat-demo
 
-Demo on how to use [lavamoat](https://github.com/LavaMoat/LavaMoat/) and [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) (SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript, object-capabilities and the Principle of Least Authority ("POLA").
+Demo on how to use [lavamoat](https://lavamoat.github.io) and [hardened javascript](https://hardenedjs.org) (formerly known as [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) or SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript, object-capabilities and the Principle of Least Authority ("POLA").
 
 Specifically, we demonstrate [lavamoat-node](https://github.com/LavaMoat/LavaMoat/tree/main/packages/node), a way to run JavaScript modules in an SES sandbox on nodejs.
 
