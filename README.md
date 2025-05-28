@@ -1,6 +1,6 @@
 # lavamoat-demo
 
-Demo on how to use [lavamoat](https://lavamoat.github.io) and [hardened javascript](https://hardenedjs.org) (formerly known as [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) or SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) on hardened javascript, object-capabilities and the Principle of Least Authority ("POLA").
+Demo on how to use [lavamoat](https://lavamoat.github.io) and [hardened javascript](https://hardenedjs.org) (formerly known as [secure ecmascript](https://github.com/endojs/endo/tree/master/packages/ses) or SES) to isolate js modules, accompanying my [talk slides](https://tvcutsem.github.io/assets/VanCutsem_LeastAuthorityJS_SecAppDev24.pdf) on how to build "Least-authority" JavaScript apps.
 
 Specifically, we demonstrate [lavamoat-node](https://lavamoat.github.io/guides/lavamoat-node/), a way to run JavaScript modules in an SES sandbox on nodejs.
 
@@ -20,7 +20,7 @@ The POLA access control policy we want to enforce is that `alice` can only **wri
 
 ![scenario setup](setup.png)
 
-See the example code in the [slides](https://tvcutsem.github.io/assets/HardenedJS_BlueLava2022.pdf) to follow along.
+See the example code in the [slides](https://tvcutsem.github.io/assets/VanCutsem_LeastAuthorityJS_SecAppDev24.pdf) to follow along.
 
 ## running the scenario without lavamoat/ses
 
