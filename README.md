@@ -20,7 +20,7 @@ The POLA access control policy we want to enforce is that `alice` can only **wri
 
 ![scenario setup](setup.png)
 
-See the example code in the [slides](https://tvcutsem.github.io/assets/VanCutsem_LeastAuthorityJS_SecAppDev24.pdf) to follow along.
+See the example code in the [slides](https://tvcutsem.github.io/assets/LeastAuthorityJS-SecAppDev2025.pdf) to follow along.
 
 ## running the scenario without lavamoat/ses
 
