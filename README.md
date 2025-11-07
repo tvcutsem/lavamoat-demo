@@ -28,7 +28,7 @@ We first show various ways Bob can circumvent the read-only restrictions on the 
 
 To run through a happy-case scenario where Bob does not stage an attack:
 
-Run `node setup-safe.js` or `npm run node-no-attack`
+Run `node setup-unsafe.js` or `npm run node-no-attack`
 
 Without attacks, the output of the code should be:
 
